@@ -1,7 +1,6 @@
 package ru.netology.graphics.image;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 public interface TextGraphicsConverter {
     /**
@@ -9,7 +8,7 @@ public interface TextGraphicsConverter {
      * @param url урл изображения
      * @return текст, представляющий собой текстовую графику переданного изображения
      * @throws IOException
-     * @throws BadImageSizeException Если соотношение сторон изображения слишком большое
+   //  * @throws BadImageSizeException Если соотношение сторон изображения слишком большое
      */
     String convert(String url) throws IOException, BadImageSizeException;
 
