@@ -15,7 +15,7 @@ import java.nio.file.Path;
  * Сервер уже за вас написан, его трогать не надо :)
 */
 public class GServer {
-    public static final int PORT = 8888;
+    public static final int PORT = 80;
 
     private HttpServer server;
     private TextGraphicsConverter converter;
