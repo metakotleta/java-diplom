@@ -10,17 +10,14 @@ import java.net.URL;
 
 public class Converter implements TextGraphicsConverter {
 
-    private static String COLOR_SCHEMA = "WIN_SCHEMA";
     private int maxWidth;
     private int maxHeight;
     private int maxRatio;
-    private String textColorSchema;
-
+    private TextColorSchema schema = new ColorConverter();
 
     @Override
     public String convert(String url) throws IOException, BadImageSizeException {
         BufferedImage img = ImageIO.read(new URL(url));
-        TextColorSchema schema = new ColorConverter();
         int width = img.getWidth();
         int height = img.getHeight();
 
@@ -81,5 +78,6 @@ public class Converter implements TextGraphicsConverter {
 
     @Override
     public void setTextColorSchema(TextColorSchema schema) {
+        this.schema = schema;
     }
 }
