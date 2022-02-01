@@ -12,23 +12,27 @@ public class Converter implements TextGraphicsConverter {
 
     private int maxWidth;
     private int maxHeight;
-    private int maxRatio;
+    private double maxRatio = Double.MAX_VALUE;
     private TextColorSchema schema = new ColorConverter();
 
     @Override
     public String convert(String url) throws IOException, BadImageSizeException {
-        BufferedImage img = ImageIO.read(new URL(url));
-        int width = img.getWidth();
-        int height = img.getHeight();
+        double doubleMaxWidth = maxWidth;
+        double doubleMaxHeight = maxHeight;
 
-        if (height / width > maxRatio) {
-            throw new BadImageSizeException((double) height / width, maxRatio);
+        BufferedImage img = ImageIO.read(new URL(url));
+        double width = img.getWidth();
+        double height = img.getHeight();
+        double currentRatio = width / height;
+
+        if (currentRatio > maxRatio) {
+            throw new BadImageSizeException(width / height, maxRatio);
         }
 
         //смущают эти касты, но лучше не придумал :( Если есть вариант лучше, просьба направить
-        double scaleRatio = setScaleRatio(maxWidth, maxHeight, width, height);
-        int newWidth = (int) ((double) width / scaleRatio);
-        int newHeight = (int) ((double) height / scaleRatio);
+        double scaleRatio = setScaleRatio(doubleMaxWidth, doubleMaxHeight, (int) width, (int) height);
+        int newWidth = (int) (width * scaleRatio);
+        int newHeight = (int) (height * scaleRatio);
         StringBuilder textPic = new StringBuilder();
 
         Image scaledImage = img.getScaledInstance(newWidth, newHeight, BufferedImage.SCALE_SMOOTH);
@@ -51,13 +55,15 @@ public class Converter implements TextGraphicsConverter {
         return textPic.toString();
     }
 
-    public double setScaleRatio(int maxWidth, int maxHeight, int width, int height) {
-        if (maxWidth != 0) {
-            return (double) width / maxWidth;
-        } else if (maxHeight != 0) {
-            return (double) height / maxHeight;
-        } else {
+    public double setScaleRatio(double maxWidth, double maxHeight, int width, int height) {
+        if (maxWidth == 0 && maxHeight == 0) {
             return 1;
+        } else if (maxWidth != 0 && maxHeight != 0) {
+            return Math.min(maxWidth / width, maxHeight / height);
+        } else if (maxWidth != 0) {
+            return maxWidth / width;
+        } else {
+            return maxHeight / height;
         }
     }
 
@@ -73,7 +79,7 @@ public class Converter implements TextGraphicsConverter {
 
     @Override
     public void setMaxRatio(double maxRatio) {
-        this.maxRatio = (int) maxRatio;
+        this.maxRatio = maxRatio;
     }
 
     @Override

@@ -25,11 +25,11 @@ public class GServer {
             throw new IllegalArgumentException("Серверу нужно передать в конструктор объект-конвертер, а было передано null.");
         }
         this.converter = converter;
-        this.converter.setMaxHeight(300);
-        this.converter.setMaxWidth(300);
+        this.converter.setMaxHeight(0);
+        this.converter.setMaxWidth(0);
         this.converter.setMaxRatio(4);
 
-        server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
+        server = HttpServer.create(new InetSocketAddress("192.168.31.68", PORT), 0);
         server.createContext("/", this::serveHtml);
         server.createContext("/convert", this::serveConvertion);
     }
